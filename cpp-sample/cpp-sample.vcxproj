@@ -23,7 +23,8 @@
     <ProjectGuid>{3AFF6C0F-A3F0-40D1-8BAB-C69454C77443}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>cppsample</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <!-- <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion> 
+      That version isn't on the default agent image in AZDO. Try just removing in hopes it will settle for whatever's available. -->
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
