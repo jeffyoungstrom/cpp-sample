@@ -14,31 +14,52 @@ variables:
   buildPlatform: ${buildPlatform}
   buildConfiguration: ${buildConfiguration}
 
-steps:
-- task: NuGetToolInstaller@1
+jobs:
+- job: Setup
+  steps: 
+    - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    vsVersion: '15.0'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+- job: build
+  strategy:
+    maxParallel: 1
+    matrix: 
+        Debug64:
+            Configuration: Debug
+            Platform: x64
+        Release64:
+            Configuration: Release
+            Platform: x64
+        Debug86:
+            Configuration: Debug
+            Platform: x86
+        Release86:
+            Configuration: Release
+            Platform: x86
+  steps:
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        vsVersion: '15.0'
+        platform: '$(Platform)'
+        configuration: '$(Configuration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    - task: VSTest@2
+      inputs:
+        platform: '$(Platform)'
+        configuration: '$(Configuration)'
 
-- task: CopyFiles@2
-  inputs:
-    Contents: '**\$(BuildConfiguration)\**\?(*.exe|*.dll|*.pdb)'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)\$(BuildConfiguration)'
+    - task: CopyFiles@2
+      inputs:
+        Contents: '**\$(Configuration)\**\?(*.exe|*.dll|*.pdb)'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)\$(Configuration)'
 
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: drop
+- job: publish
+  steps:
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: drop
