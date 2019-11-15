@@ -50,9 +50,9 @@ steps:
   - task: CopyFiles@2
     inputs:
       Contents: '**\$(Configuration)\**\?(*.exe|*.dll|*.pdb)'
-      TargetFolder: '$(Build.ArtifactStagingDirectory)\$(Configuration)'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)\$(System.JobName)'
 
   - task: PublishBuildArtifacts@1
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: drop
+      artifactName: $(System.JobName)
