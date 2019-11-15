@@ -24,6 +24,7 @@ jobs:
         restoreSolution: '$(solution)'
 
 - job: build
+  dependsOn: Setup
   strategy:
     maxParallel: 1
     matrix: 
@@ -58,6 +59,7 @@ jobs:
         TargetFolder: '$(Build.ArtifactStagingDirectory)\$(Configuration)'
 
 - job: publish
+  dependsOn: build
   steps:
     - task: PublishBuildArtifacts@1
       inputs:
